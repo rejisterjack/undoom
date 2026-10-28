@@ -1,0 +1,17 @@
+services:
+  demo:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../.demo-out:/work
+
+  postgres:
+    profiles: ["postgres"]
+    image: postgres:16
+    environment:
+      POSTGRES_USER: undoom
+      POSTGRES_PASSWORD: undoom
+      POSTGRES_DB: undoom
+    ports:
+      - "5432:5432"

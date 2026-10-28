@@ -1,0 +1,12 @@
+.venv
+.git
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.undoom
+apps/ui/node_modules
+apps/ui/.next
+dist
+*.sqlite
+.demo-out

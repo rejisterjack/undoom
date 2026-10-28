@@ -1,17 +1,85 @@
 [project]
 name = "undoom"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Turn production agent failures into regression tests that run on every change."
 readme = "README.md"
+license = "MIT"
 authors = [
     { name = "Rupam Das", email = "rejisterjack@gmail.com" }
 ]
-requires-python = ">=3.15"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.10",
+    "typer>=0.15",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+keywords = ["agents", "replay", "regression", "llm", "tools"]
+
+[project.optional-dependencies]
+openai = ["openai>=1.68"]
+postgres = ["psycopg[binary]>=3.2"]
+ui = ["fastapi>=0.115", "uvicorn>=0.34"]
+
+[project.urls]
+Homepage = "https://undoom.rejisterjack.com"
+Repository = "https://github.com/rejisterjack/undoom"
+Documentation = "https://github.com/rejisterjack/undoom/blob/main/ARCHITECTURE.md"
 
 [project.scripts]
-undoom = "undoom:main"
+undoom = "undoom.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "httpx>=0.28",
+]
 
 [build-system]
 requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "postgres: integration test that needs UNDOOM_TEST_POSTGRES",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "examples"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008", "E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/order_lookup/demo.py" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["undoom", "examples"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["undoom"]
+disallow_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+check_untyped_defs = true

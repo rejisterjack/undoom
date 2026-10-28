@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: undoom
+          POSTGRES_PASSWORD: undoom
+          POSTGRES_DB: undoom
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U undoom -d undoom"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      UNDOOM_TEST_POSTGRES: postgresql://undoom:undoom@localhost:5432/undoom
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: uv sync --frozen --all-extras --group dev
+      - name: Lint
+        run: uv run ruff check src tests examples
+      - name: Format
+        run: uv run ruff format --check src tests examples
+      - name: Types
+        run: uv run mypy src
+      - name: Test
+        run: uv run pytest
+
+  ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build synthetic demo
+        working-directory: apps/ui
+        env:
+          NEXT_PUBLIC_DEMO: "1"
+        run: |
+          npm install
+          npm run build

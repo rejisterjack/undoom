@@ -1,0 +1,18 @@
+# Copy into a repository that already has .undoom/cases committed.
+# Live replay needs a model credential. The order-lookup demo uses the fake provider instead.
+name: undoom
+on:
+  push:
+  pull_request:
+jobs:
+  regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install undoom
+      - run: undoom test --format junit
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

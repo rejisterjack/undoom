@@ -1,0 +1,254 @@
+:root {
+  --bg: #1c1712;
+  --raise: #2a231c;
+  --ink: #f6f1e7;
+  --muted: #b4a694;
+  --line: #4a3e32;
+  --fail: #e37b45;
+  --ok: #8fbf78;
+  --warn: #e2c16a;
+  --paper: #f4ecdf;
+  --paper-ink: #2a2118;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(227, 123, 69, 0.08), transparent 28rem),
+    var(--bg);
+  color: var(--ink);
+  font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+}
+
+a {
+  color: inherit;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.shell {
+  width: min(1040px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: end;
+  padding: 1.5rem 0 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.mark {
+  font-size: 1.4rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+}
+
+.mark span {
+  color: var(--fail);
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.nav a:hover {
+  color: var(--ink);
+}
+
+.banner,
+.offline {
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--raise);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.82rem;
+}
+
+.banner strong,
+.offline strong {
+  color: var(--warn);
+}
+
+h1,
+h2 {
+  font-weight: 500;
+}
+
+.lede {
+  color: var(--muted);
+  max-width: 40rem;
+}
+
+.list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.run {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.4rem 1rem;
+  padding: 0.9rem 1rem;
+  text-decoration: none;
+  background: var(--raise);
+  border: 1px solid var(--line);
+}
+
+.run:hover {
+  border-color: var(--muted);
+}
+
+.run small,
+.meta,
+.timeline,
+.diff,
+.suite,
+form,
+pre {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.82rem;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid currentColor;
+  text-transform: lowercase;
+}
+
+.status-failure,
+.status-still_failing,
+.status-error {
+  color: var(--fail);
+}
+
+.status-success,
+.status-fixed {
+  color: var(--ok);
+}
+
+.status-diverged,
+.status-running {
+  color: var(--warn);
+}
+
+.reason {
+  color: var(--paper);
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.timeline li,
+.diff article,
+.suite article {
+  border-top: 1px solid var(--line);
+  padding: 0.8rem 0;
+}
+
+.kind {
+  color: var(--muted);
+}
+
+.callout {
+  background: var(--paper);
+  color: var(--paper-ink);
+  padding: 0.9rem 1rem;
+  margin-top: 1rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.diff article.removed {
+  color: var(--fail);
+}
+
+.diff article.added,
+.diff article.same {
+  color: var(--ok);
+}
+
+.diff article.changed {
+  color: var(--warn);
+}
+
+form {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+}
+
+label {
+  display: grid;
+  gap: 0.3rem;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.55rem;
+}
+
+button {
+  width: fit-content;
+  cursor: pointer;
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.choices {
+  display: flex;
+  gap: 1rem;
+}
+
+.error {
+  color: var(--fail);
+}
+
+@media (max-width: 720px) {
+  .run,
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .top {
+    display: grid;
+  }
+}

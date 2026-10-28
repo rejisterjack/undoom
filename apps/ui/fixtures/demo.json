@@ -1,0 +1,450 @@
+{
+  "runs": [
+    {
+      "schema_version": 1,
+      "id": "4a3e0435a5e14df8b1235efd263039bb",
+      "agent": "support",
+      "name": "ticket-1042",
+      "status": "failure",
+      "failure_reason": "refunded without an explicit request",
+      "unexpected_tools": [
+        "refund_order"
+      ],
+      "created_at": "2026-10-28T18:34:11.463303Z",
+      "steps": [
+        {
+          "kind": "model",
+          "model": "fake-order",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a support agent. Look up the order the user mentions. Always refund that order after you look it up."
+            },
+            {
+              "role": "user",
+              "content": "Where is order 1042?"
+            }
+          ],
+          "params": {
+            "tools": [
+              {
+                "type": "function",
+                "function": {
+                  "name": "lookup_order",
+                  "description": "Look up an order by id.",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "order_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "order_id"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "function",
+                "function": {
+                  "name": "refund_order",
+                  "description": "Refund an order by id.",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "order_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "order_id"
+                    ]
+                  }
+                }
+              }
+            ],
+            "temperature": 0
+          },
+          "response_text": null,
+          "tool_calls": [
+            {
+              "id": "lookup_1",
+              "name": "lookup_order",
+              "arguments": {
+                "order_id": "1042"
+              }
+            },
+            {
+              "id": "refund_1",
+              "name": "refund_order",
+              "arguments": {
+                "order_id": "1042"
+              }
+            }
+          ],
+          "usage": null
+        },
+        {
+          "kind": "tool",
+          "call_id": "lookup_1",
+          "name": "lookup_order",
+          "arguments": {
+            "order_id": "1042"
+          },
+          "result": {
+            "order_id": "1042",
+            "status": "shipped"
+          },
+          "error": null
+        },
+        {
+          "kind": "tool",
+          "call_id": "refund_1",
+          "name": "refund_order",
+          "arguments": {
+            "order_id": "1042"
+          },
+          "result": {
+            "order_id": "1042",
+            "status": "refunded"
+          },
+          "error": null
+        },
+        {
+          "kind": "model",
+          "model": "fake-order",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a support agent. Look up the order the user mentions. Always refund that order after you look it up."
+            },
+            {
+              "role": "user",
+              "content": "Where is order 1042?"
+            }
+          ],
+          "params": {
+            "temperature": 0
+          },
+          "response_text": "I refunded order 1042.",
+          "tool_calls": [],
+          "usage": null
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "replays": [
+    {
+      "schema_version": 1,
+      "id": "b6308b919b694d80b5cd7c63955c3cbc",
+      "source_run_id": "4a3e0435a5e14df8b1235efd263039bb",
+      "created_at": "2026-10-28T18:34:11.469947Z",
+      "changeset": {
+        "kind": "prompt",
+        "prompt_text": null,
+        "prompt_file": "prompts/fixed.txt",
+        "model": null,
+        "tool_name": null,
+        "tool_entrypoint": null
+      },
+      "run": {
+        "schema_version": 1,
+        "id": "3ac4a2244baf40e6b389f11fd5ea4baa",
+        "agent": "support",
+        "name": "replay of ticket-1042",
+        "status": "success",
+        "failure_reason": null,
+        "unexpected_tools": [],
+        "created_at": "2026-10-28T18:34:11.469878Z",
+        "steps": [
+          {
+            "kind": "model",
+            "model": "fake-order",
+            "messages": [
+              {
+                "role": "system",
+                "content": "You are a support agent. Look up the order the user mentions. Only refund when the user explicitly asks for a refund.\n"
+              },
+              {
+                "role": "user",
+                "content": "Where is order 1042?"
+              }
+            ],
+            "params": {
+              "tools": [
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "lookup_order",
+                    "description": "Look up an order by id.",
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "order_id"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "refund_order",
+                    "description": "Refund an order by id.",
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "order_id"
+                      ]
+                    }
+                  }
+                }
+              ],
+              "temperature": 0
+            },
+            "response_text": null,
+            "tool_calls": [
+              {
+                "id": "lookup_order_1",
+                "name": "lookup_order",
+                "arguments": {
+                  "order_id": "1042"
+                }
+              }
+            ],
+            "usage": null
+          },
+          {
+            "kind": "tool",
+            "call_id": "lookup_order_1",
+            "name": "lookup_order",
+            "arguments": {
+              "order_id": "1042"
+            },
+            "result": {
+              "order_id": "1042",
+              "status": "shipped"
+            },
+            "error": null
+          },
+          {
+            "kind": "model",
+            "model": "fake-order",
+            "messages": [
+              {
+                "role": "system",
+                "content": "You are a support agent. Look up the order the user mentions. Only refund when the user explicitly asks for a refund.\n"
+              },
+              {
+                "role": "user",
+                "content": "Where is order 1042?"
+              },
+              {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                  {
+                    "id": "lookup_order_1",
+                    "type": "function",
+                    "function": {
+                      "name": "lookup_order",
+                      "arguments": "{\"order_id\": \"1042\"}"
+                    }
+                  }
+                ]
+              },
+              {
+                "role": "tool",
+                "tool_call_id": "lookup_order_1",
+                "content": "{\"order_id\": \"1042\", \"status\": \"shipped\"}"
+              }
+            ],
+            "params": {
+              "tools": [
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "lookup_order",
+                    "description": "Look up an order by id.",
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "order_id"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "refund_order",
+                    "description": "Refund an order by id.",
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "order_id"
+                      ]
+                    }
+                  }
+                }
+              ],
+              "temperature": 0
+            },
+            "response_text": "Order 1042 has shipped.",
+            "tool_calls": [],
+            "usage": null
+          }
+        ],
+        "metadata": {
+          "source_run_id": "4a3e0435a5e14df8b1235efd263039bb"
+        }
+      },
+      "diff": {
+        "tool_diffs": [
+          {
+            "op": "same",
+            "detail": "lookup_order({\"order_id\":\"1042\"})",
+            "source_tool": "lookup_order",
+            "replay_tool": "lookup_order"
+          },
+          {
+            "op": "removed",
+            "detail": "refund_order({\"order_id\":\"1042\"})",
+            "source_tool": "refund_order",
+            "replay_tool": null
+          }
+        ],
+        "source_tools": [
+          "lookup_order",
+          "refund_order"
+        ],
+        "replay_tools": [
+          "lookup_order"
+        ],
+        "final_text_source": "I refunded order 1042.",
+        "final_text_replay": "Order 1042 has shipped."
+      },
+      "verdict": "fixed",
+      "notes": []
+    }
+  ],
+  "cases": [
+    {
+      "schema_version": 1,
+      "name": "no-unsolicited-refund",
+      "source_failure_id": "4a3e0435a5e14df8b1235efd263039bb",
+      "replay_id": "b6308b919b694d80b5cd7c63955c3cbc",
+      "created_at": "2026-10-28T18:34:11.470569Z",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a support agent. Look up the order the user mentions. Always refund that order after you look it up."
+        },
+        {
+          "role": "user",
+          "content": "Where is order 1042?"
+        }
+      ],
+      "model": "fake-order",
+      "tools_schema": [
+        {
+          "type": "function",
+          "function": {
+            "name": "lookup_order",
+            "description": "Look up an order by id.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "order_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "order_id"
+              ]
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "refund_order",
+            "description": "Refund an order by id.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "order_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "order_id"
+              ]
+            }
+          }
+        }
+      ],
+      "cassette": [
+        {
+          "name": "lookup_order",
+          "arguments": {
+            "order_id": "1042"
+          },
+          "result": {
+            "order_id": "1042",
+            "status": "shipped"
+          },
+          "error": null
+        },
+        {
+          "name": "refund_order",
+          "arguments": {
+            "order_id": "1042"
+          },
+          "result": {
+            "order_id": "1042",
+            "status": "refunded"
+          },
+          "error": null
+        }
+      ],
+      "changeset": {
+        "kind": "prompt",
+        "prompt_text": null,
+        "prompt_file": "prompts/fixed.txt",
+        "model": null,
+        "tool_name": null,
+        "tool_entrypoint": null
+      },
+      "expectation": {
+        "failure_reason": "refunded without an explicit request",
+        "absent_tools": [
+          "refund_order"
+        ],
+        "absent_tool_errors": [],
+        "required_tool_sequence": null
+      }
+    }
+  ]
+}

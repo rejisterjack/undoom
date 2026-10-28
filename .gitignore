@@ -27,10 +27,22 @@ htmlcov/
 *.sqlite
 *.sqlite3
 *.db
+.undoom/*
+!.undoom/cases/
+!.undoom/cases/**
 
 # Environment and secrets
 .env
 .env.*
+
+# Web UI
+node_modules/
+.next/
+out/
+
+# Demo workspace written by examples/order_lookup/demo.py
+examples/order_lookup/workspace/
+.demo-out/
 
 # macOS
 .DS_Store
