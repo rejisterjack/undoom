@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { loadLibrary, recordedReplays } from "@/lib/data";
 
+import { PromoteForm } from "../../promote-form";
 import { Status } from "../../status";
 
 export function generateStaticParams() {
@@ -49,6 +50,10 @@ export default async function DiffPage({ params }: { params: Promise<{ id: strin
         </section>
       </div>
       {replay.notes.length > 0 ? <p className="meta">{replay.notes.join(" ")}</p> : null}
+      {!library.demo && replay.verdict === "fixed" ? <PromoteForm replayId={replay.id} /> : null}
+      {!library.demo && replay.verdict !== "fixed" ? (
+        <p className="meta">Only a fixed replay can be promoted.</p>
+      ) : null}
     </main>
   );
 }

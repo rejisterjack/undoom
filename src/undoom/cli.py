@@ -9,8 +9,9 @@ from typing import Annotated
 import typer
 
 from undoom.config import configure, get_config
-from undoom.errors import PromoteError, ReplayError, UndoomError
+from undoom.errors import PromoteError, ReplayError, TraceImportError, UndoomError
 from undoom.models import RunStatus
+from undoom.otel.import_trace import import_trace
 from undoom.present import format_replay, format_run, format_run_line
 from undoom.replay.changeset import build_changeset
 from undoom.replay.engine import replay_run
@@ -95,6 +96,28 @@ def runs_fail(
     store.save_run(run)
     stored = store.get_run(run_id)
     typer.echo(format_run(stored if stored is not None else run))
+
+
+@app.command("import")
+def import_cmd(
+    trace_file: Annotated[Path, typer.Argument(help="OTLP/JSON export with resourceSpans")],
+    trace_id: Annotated[str | None, typer.Option("--trace-id")] = None,
+    agent: Annotated[str, typer.Option("--agent")] = "default",
+    name: Annotated[str, typer.Option("--name")] = "imported",
+) -> None:
+    """Import a GenAI OTLP/JSON trace that includes tool arguments and results."""
+
+    try:
+        document = json.loads(trace_file.read_text(encoding="utf-8"))
+        if not isinstance(document, dict):
+            raise TraceImportError("trace file must contain a JSON object")
+        run = import_trace(document, trace_id=trace_id, agent=agent, name=name)
+        store = get_config().store()
+        store.save_run(run)
+    except (OSError, json.JSONDecodeError, TraceImportError, UndoomError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(1) from exc
+    typer.echo(run.id)
 
 
 @app.command("replay")

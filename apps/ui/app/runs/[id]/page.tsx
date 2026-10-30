@@ -16,7 +16,7 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
   const library = await loadLibrary();
   const run = library.runs.find((item) => item.id === id);
   if (!run) notFound();
-  const replay = library.replays.find((item) => item.source_run_id === run.id);
+  const replays = library.replays.filter((item) => item.source_run_id === run.id);
   return (
     <main>
       <p>
@@ -31,12 +31,16 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
         <p className="meta">unexpected tools: {run.unexpected_tools.join(", ")}</p>
       ) : null}
       <Timeline steps={run.steps} />
-      {replay ? (
-        <p>
-          <Link href={`/diff/${replay.id}`}>Compare with the {replay.verdict} replay</Link>
-        </p>
-      ) : (
+      {replays.length === 0 ? (
         <p>No replay has been saved for this run.</p>
+      ) : (
+        <div className="list">
+          {replays.map((replay) => (
+            <p key={replay.id}>
+              <Link href={`/diff/${replay.id}`}>Compare with the {replay.verdict} replay</Link>
+            </p>
+          ))}
+        </div>
       )}
       {library.demo ? (
         <p className="meta">The demo does not accept a new replay. The comparison above is the recorded fix.</p>

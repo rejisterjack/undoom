@@ -3,10 +3,13 @@
 import { useState } from "react";
 
 type Kind = "prompt" | "model" | "tool";
+type PromptSource = "text" | "file";
 
 export function ReplayForm({ runId }: { runId: string }) {
   const [kind, setKind] = useState<Kind>("prompt");
+  const [promptSource, setPromptSource] = useState<PromptSource>("text");
   const [prompt, setPrompt] = useState("");
+  const [promptFile, setPromptFile] = useState("");
   const [model, setModel] = useState("");
   const [toolName, setToolName] = useState("");
   const [entrypoint, setEntrypoint] = useState("");
@@ -18,7 +21,10 @@ export function ReplayForm({ runId }: { runId: string }) {
     setPending(true);
     setError("");
     const body: Record<string, string> = { run_id: runId };
-    if (kind === "prompt") body.prompt_text = prompt;
+    if (kind === "prompt") {
+      if (promptSource === "file") body.prompt_file = promptFile;
+      else body.prompt_text = prompt;
+    }
     if (kind === "model") body.model = model;
     if (kind === "tool") {
       body.tool_name = toolName;
@@ -61,10 +67,49 @@ export function ReplayForm({ runId }: { runId: string }) {
         ))}
       </div>
       {kind === "prompt" ? (
-        <label>
-          Prompt
-          <textarea onChange={(event) => setPrompt(event.target.value)} required rows={4} value={prompt} />
-        </label>
+        <>
+          <div className="choices">
+            <label>
+              <input
+                checked={promptSource === "text"}
+                name="promptSource"
+                onChange={() => setPromptSource("text")}
+                type="radio"
+              />
+              inline text
+            </label>
+            <label>
+              <input
+                checked={promptSource === "file"}
+                name="promptSource"
+                onChange={() => setPromptSource("file")}
+                type="radio"
+              />
+              file path
+            </label>
+          </div>
+          {promptSource === "text" ? (
+            <label>
+              Prompt
+              <textarea
+                onChange={(event) => setPrompt(event.target.value)}
+                required
+                rows={4}
+                value={prompt}
+              />
+            </label>
+          ) : (
+            <label>
+              Prompt file on the machine running undoom serve
+              <input
+                onChange={(event) => setPromptFile(event.target.value)}
+                placeholder="prompts/support.txt"
+                required
+                value={promptFile}
+              />
+            </label>
+          )}
+        </>
       ) : null}
       {kind === "model" ? (
         <label>

@@ -15,3 +15,7 @@ class ReplayError(UndoomError):
 
 class PromoteError(UndoomError):
     """A replay cannot become a regression case."""
+
+
+class TraceImportError(UndoomError):
+    """An OpenTelemetry document cannot become a cassette-ready run."""

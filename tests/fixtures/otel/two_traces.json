@@ -1,0 +1,56 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "traceId": "cccccccccccccccccccccccccccccccc",
+              "spanId": "1111111111111111",
+              "name": "chat one",
+              "startTimeUnixNano": "1000",
+              "attributes": [
+                {
+                  "key": "gen_ai.operation.name",
+                  "value": { "stringValue": "chat" }
+                },
+                {
+                  "key": "gen_ai.request.model",
+                  "value": { "stringValue": "fake-one" }
+                },
+                {
+                  "key": "gen_ai.input.messages",
+                  "value": {
+                    "stringValue": "[{\"role\":\"user\",\"content\":\"one\"}]"
+                  }
+                }
+              ]
+            },
+            {
+              "traceId": "dddddddddddddddddddddddddddddddd",
+              "spanId": "2222222222222222",
+              "name": "chat two",
+              "startTimeUnixNano": "2000",
+              "attributes": [
+                {
+                  "key": "gen_ai.operation.name",
+                  "value": { "stringValue": "chat" }
+                },
+                {
+                  "key": "gen_ai.request.model",
+                  "value": { "stringValue": "fake-two" }
+                },
+                {
+                  "key": "gen_ai.input.messages",
+                  "value": {
+                    "stringValue": "[{\"role\":\"user\",\"content\":\"two\"}]"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

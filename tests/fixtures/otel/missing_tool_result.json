@@ -1,0 +1,50 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "traceId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "spanId": "1111111111111111",
+              "name": "chat gpt-4.1",
+              "startTimeUnixNano": "1000",
+              "attributes": [
+                {
+                  "key": "gen_ai.operation.name",
+                  "value": { "stringValue": "chat" }
+                },
+                {
+                  "key": "gen_ai.request.model",
+                  "value": { "stringValue": "fake-order" }
+                },
+                {
+                  "key": "gen_ai.input.messages",
+                  "value": {
+                    "stringValue": "[{\"role\":\"user\",\"content\":\"hi\"}]"
+                  }
+                }
+              ]
+            },
+            {
+              "traceId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "spanId": "2222222222222222",
+              "name": "execute_tool lookup_order",
+              "startTimeUnixNano": "2000",
+              "attributes": [
+                {
+                  "key": "gen_ai.operation.name",
+                  "value": { "stringValue": "execute_tool" }
+                },
+                {
+                  "key": "gen_ai.tool.name",
+                  "value": { "stringValue": "lookup_order" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

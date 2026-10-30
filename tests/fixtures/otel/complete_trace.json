@@ -1,0 +1,76 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "spanId": "1111111111111111",
+              "name": "chat gpt-4.1",
+              "startTimeUnixNano": "1000",
+              "attributes": [
+                {
+                  "key": "gen_ai.operation.name",
+                  "value": { "stringValue": "chat" }
+                },
+                {
+                  "key": "gen_ai.request.model",
+                  "value": { "stringValue": "fake-order" }
+                },
+                {
+                  "key": "gen_ai.input.messages",
+                  "value": {
+                    "stringValue": "[{\"role\":\"system\",\"content\":\"Look up the order.\"},{\"role\":\"user\",\"content\":\"Where is order 1042?\"}]"
+                  }
+                },
+                {
+                  "key": "gen_ai.tool.definitions",
+                  "value": {
+                    "stringValue": "[{\"type\":\"function\",\"function\":{\"name\":\"lookup_order\",\"description\":\"Look up an order by id.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"order_id\":{\"type\":\"string\"}},\"required\":[\"order_id\"]}}}]"
+                  }
+                },
+                {
+                  "key": "gen_ai.response.tool_calls",
+                  "value": {
+                    "stringValue": "[{\"id\":\"lookup_1\",\"name\":\"lookup_order\",\"arguments\":{\"order_id\":\"1042\"}}]"
+                  }
+                }
+              ]
+            },
+            {
+              "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "spanId": "2222222222222222",
+              "name": "execute_tool lookup_order",
+              "startTimeUnixNano": "2000",
+              "attributes": [
+                {
+                  "key": "gen_ai.operation.name",
+                  "value": { "stringValue": "execute_tool" }
+                },
+                {
+                  "key": "gen_ai.tool.name",
+                  "value": { "stringValue": "lookup_order" }
+                },
+                {
+                  "key": "gen_ai.tool.call.id",
+                  "value": { "stringValue": "lookup_1" }
+                },
+                {
+                  "key": "gen_ai.tool.call.arguments",
+                  "value": { "stringValue": "{\"order_id\":\"1042\"}" }
+                },
+                {
+                  "key": "gen_ai.tool.call.result",
+                  "value": {
+                    "stringValue": "{\"order_id\":\"1042\",\"status\":\"shipped\",\"authorization\":\"Bearer sk-secretTOKEN123456\"}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

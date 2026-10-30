@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Local UI can replay with a prompt file path (read by `undoom serve`), list every replay for a run, and promote a fixed replay to a case.
+- `undoom import` turns an OTLP/JSON GenAI export into a stored run when tool spans include arguments and a result or error.
+
 ## 1.0.0
 
 First production release.

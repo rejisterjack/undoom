@@ -9,6 +9,7 @@ Undoom records a tool-calling run, replays it with one change against the record
 - **Replay engine.** Loads the first model step, applies the changeset, and calls a model provider at temperature 0. Tool calls are answered from a cassette keyed by tool name and canonical JSON arguments. The overridden tool, if the change is a tool implementation, is the only function Undoom executes.
 - **Case files.** `.undoom/cases/*.json` holds the original messages, the tool schema, the cassette, the changeset (usually a path), and the expectation. `undoom test` does not need the trace database.
 - **Local API and UI.** `undoom serve` exposes the trace log to `apps/ui`. The Vercel build of that UI does not talk to a store. It imports `fixtures/demo.json`, which is a synthetic export of the order-lookup story.
+- **OpenTelemetry import.** `undoom import` reads an OTLP/JSON document (`resourceSpans`) and builds a `Run` from GenAI chat and `execute_tool` spans. Tool spans must carry `gen_ai.tool.call.arguments` and either `gen_ai.tool.call.result` or a recorded error. The importer is a JSON reader, not a tracing backend, and it does not call tools.
 
 ## Failure signature
 
@@ -39,7 +40,7 @@ Every run, replay, and case carries `schema_version`. This release accepts versi
 - Least-privilege policy or credential brokering (Keywarden).
 - Sandboxed execution of generated code (Boxwren).
 - A hosted multi-tenant trace product. The public site is a synthetic demo.
-- OpenTelemetry import. Native capture keeps the tool results a cassette needs. GenAI spans often do not, so an importer is a later project rather than a launch dependency.
+- Inventing cassette entries from incomplete GenAI spans. Native capture remains the primary path; the OTLP importer rejects spans that omit tool arguments or results.
 
 ## Process model
 

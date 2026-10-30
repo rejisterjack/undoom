@@ -85,6 +85,17 @@ undoom runs show <run-id>
 undoom runs fail <run-id> --reason "refunded without an explicit request" --unexpected-tool refund_order
 ```
 
+## Import an OpenTelemetry trace
+
+When a stack already exports GenAI spans, you can turn one OTLP/JSON document into a stored run:
+
+```bash
+undoom import trace.json --agent support --name ticket-1042
+undoom import trace.json --trace-id <id>   # required when the file holds more than one trace
+```
+
+The importer only accepts tool spans that include both `gen_ai.tool.call.arguments` and a result or error. GenAI conventions mark those fields as opt-in; a span that omits them cannot fill a cassette, so Undoom refuses the import instead of inventing values. Mark the failure afterward with `undoom runs fail` the same way you would for a native capture.
+
 ## Replay one change
 
 ```bash
