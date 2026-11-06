@@ -10,6 +10,7 @@ from collections.abc import Callable
 from typing import Any, TypeVar
 
 from undoom.models import Replay, Run
+from undoom.store.migrate import ensure_schema_version_pg
 
 T = TypeVar("T")
 
@@ -45,6 +46,7 @@ class PostgresStore:
         def init(cur: Any) -> None:
             for statement in statements:
                 cur.execute(statement)
+            ensure_schema_version_pg(cur)
 
         self._exec(init)
 

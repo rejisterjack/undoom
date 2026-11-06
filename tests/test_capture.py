@@ -1,7 +1,7 @@
 import json
 from types import SimpleNamespace
 
-from undoom import configure, run, wrap_openai
+from undoom import configure, run, wrap_anthropic, wrap_openai
 from undoom.models import RunStatus, ToolStep
 
 
@@ -102,6 +102,66 @@ def test_openai_wrapper_records_the_tool_round_trip(tmp_path) -> None:
         )
     assert seen == ["1042"]
     assert client.completions.calls == 2
+    kinds = [step.kind for step in recorder.run.steps]
+    assert kinds == ["model", "tool", "model"]
+    assert recorder.run.status == RunStatus.success
+
+
+class _AnthropicBlock:
+    def __init__(self, **fields: object) -> None:
+        for key, value in fields.items():
+            setattr(self, key, value)
+
+    def model_dump(self) -> dict[str, object]:
+        return dict(self.__dict__)
+
+
+class _AnthropicResponse:
+    def __init__(self, blocks: list[_AnthropicBlock], model: str = "fake-claude") -> None:
+        self.content = blocks
+        self.model = model
+        self.usage = None
+
+
+class _AnthropicMessages:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def create(self, **kwargs: object) -> _AnthropicResponse:
+        self.calls += 1
+        if self.calls == 1:
+            return _AnthropicResponse(
+                [
+                    _AnthropicBlock(
+                        type="tool_use",
+                        id="toolu_1",
+                        name="lookup_order",
+                        input={"order_id": "1042"},
+                    )
+                ]
+            )
+        return _AnthropicResponse([_AnthropicBlock(type="text", text="Order 1042 has shipped.")])
+
+
+def test_anthropic_wrapper_records_the_tool_round_trip(tmp_path) -> None:
+    configure(store=tmp_path / "traces.sqlite", agent="support")
+    seen: list[str] = []
+
+    def lookup_order(order_id: str) -> dict[str, str]:
+        seen.append(order_id)
+        return {"status": "shipped"}
+
+    messages = _AnthropicMessages()
+    client = SimpleNamespace(messages=messages)
+    with run(name="anthropic-wrapped") as recorder:
+        wrap_anthropic(client, recorder, tools={"lookup_order": lookup_order})
+        client.messages.create(
+            model="fake-claude",
+            max_tokens=256,
+            messages=[{"role": "user", "content": "Where is order 1042?"}],
+        )
+    assert seen == ["1042"]
+    assert messages.calls == 2
     kinds = [step.kind for step in recorder.run.steps]
     assert kinds == ["model", "tool", "model"]
     assert recorder.run.status == RunStatus.success

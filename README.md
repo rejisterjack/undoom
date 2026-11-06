@@ -77,7 +77,9 @@ with undoom.run(name="ticket-1042") as recorder:
 
 `unexpected_tools` is the failure signature. Promote turns those names into the check `undoom test` enforces. Without them, Undoom treats tools that disappeared in the fixed replay as the signature.
 
-You can record a model call and a tool yourself when you are not on the OpenAI SDK. `recorder.record_model(...)` and `with recorder.tool(name, arguments) as handle: handle.record(result)` are the contract. Adapters are thin callers of that API.
+`undoom.wrap_anthropic(client, recorder, tools=...)` does the same for Anthropic's `messages.create` API.
+
+You can record a model call and a tool yourself when you are not on those SDKs. `recorder.record_model(...)` and `with recorder.tool(name, arguments) as handle: handle.record(result)` are the contract. Adapters are thin callers of that API.
 
 ```bash
 undoom runs list

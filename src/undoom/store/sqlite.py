@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import TypeVar
 
 from undoom.models import Replay, Run
+from undoom.store.migrate import ensure_schema_version
 
 T = TypeVar("T")
 
@@ -39,7 +40,12 @@ CREATE INDEX IF NOT EXISTS idx_replays_created ON replays(created_at);
 class SqliteStore:
     def __init__(self, path: str | Path) -> None:
         self.path = Path(path)
-        self._exec(lambda conn: conn.executescript(_SCHEMA))
+
+        def init(conn: sqlite3.Connection) -> None:
+            conn.executescript(_SCHEMA)
+            ensure_schema_version(conn.execute)
+
+        self._exec(init)
 
     def save_run(self, run: Run) -> None:
         payload = run.model_dump(mode="json")
