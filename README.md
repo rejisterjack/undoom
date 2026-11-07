@@ -24,9 +24,10 @@ Python 3.11 or newer.
 
 ```bash
 pip install undoom
-pip install 'undoom[openai]'    # live replay against the OpenAI API
-pip install 'undoom[postgres]'  # shared trace log
-pip install 'undoom[ui]'        # local diff UI
+pip install 'undoom[openai]'     # live replay against the OpenAI API
+pip install 'undoom[anthropic]'  # Anthropic Messages capture helper
+pip install 'undoom[postgres]'   # shared trace log
+pip install 'undoom[ui]'         # local diff UI
 ```
 
 Traces default to `.undoom/traces.sqlite`. Case files live in `.undoom/cases/` and are meant to be committed. Keep the database out of git. A useful `.gitignore`:
