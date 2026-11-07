@@ -4,7 +4,7 @@ Undoom records a tool-calling run, replays it with one change against the record
 
 ## Components
 
-- **Capture API** (`undoom.run`, `undoom.wrap_openai`). A run is a versioned JSON document: model steps (messages, tool calls, the tool schema) and tool steps (arguments, result, error). The OpenAI adapter is a thin caller of that API. Other stacks can record with `record_model` and `tool` directly.
+- **Capture API** (`undoom.run`, `undoom.wrap_openai`, `undoom.wrap_anthropic`). A run is a versioned JSON document: model steps (messages, tool calls, the tool schema) and tool steps (arguments, result, error). The OpenAI and Anthropic adapters are thin callers of that API. Other stacks can record with `record_model` and `tool` directly.
 - **Trace store.** SQLite by default, Postgres when `UNDOOM_STORE` is a postgres URL. Both persist the same document plus indexed columns for id, agent, status, time, and failure reason. Writes pass through redaction.
 - **Replay engine.** Loads the first model step, applies the changeset, and calls a model provider at temperature 0. Tool calls are answered from a cassette keyed by tool name and canonical JSON arguments. The overridden tool, if the change is a tool implementation, is the only function Undoom executes.
 - **Case files.** `.undoom/cases/*.json` holds the original messages, the tool schema, the cassette, the changeset (usually a path), and the expectation. `undoom test` does not need the trace database.
@@ -24,7 +24,7 @@ Assistant text is part of the diff and not the assertion. Model nondeterminism i
 
 ## Schema
 
-Every run, replay, and case carries `schema_version`. This release accepts version 1 only. A document from a newer major version fails on read instead of being guessed at. There is no online migrator. Dump the JSON payloads and load them into a new database if you need to move history.
+Every run, replay, and case carries `schema_version`. This release accepts version 1 only. A document from a newer major version fails on read instead of being guessed at. Stores also keep an `undoom_schema` table via `undoom.store.migrate` so future DDL bumps have a version hook; step migrations are empty until a real shape change lands. Dump the JSON payloads and load them into a new database if you need to move history across unsupported document versions.
 
 ## Trust boundary
 
@@ -40,6 +40,8 @@ Every run, replay, and case carries `schema_version`. This release accepts versi
 - Least-privilege policy or credential brokering (Keywarden).
 - Sandboxed execution of generated code (Boxwren).
 - A hosted multi-tenant trace product. The public site is a synthetic demo.
+
+**Won't-build (closed):** Multi-tenant hosted Undoom stays out of scope. Local SQLite/Postgres + optional UI is the product.
 - Inventing cassette entries from incomplete GenAI spans. Native capture remains the primary path; the OTLP importer rejects spans that omit tool arguments or results.
 
 ## Process model

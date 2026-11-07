@@ -2,6 +2,7 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
+from undoom.capture.anthropic import wrap_anthropic
 from undoom.capture.context import run
 from undoom.capture.openai import wrap_openai
 from undoom.config import configure
@@ -11,4 +12,4 @@ try:
 except PackageNotFoundError:
     __version__ = "1.0.0"
 
-__all__ = ["__version__", "configure", "run", "wrap_openai"]
+__all__ = ["__version__", "configure", "run", "wrap_anthropic", "wrap_openai"]
