@@ -41,7 +41,7 @@ class OpenAIProvider:
             try:
                 from openai import OpenAI
             except ImportError as exc:
-                raise ReplayError(
+                raise RuntimeError(
                     "OpenAI support is not installed. Install it with: pip install 'undoom[openai]'"
                 ) from exc
             client = OpenAI()

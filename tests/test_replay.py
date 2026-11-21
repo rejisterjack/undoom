@@ -90,6 +90,32 @@ def test_two_changes_are_rejected() -> None:
     assert replay is not None
 
 
+def test_provider_failure_is_an_error_verdict() -> None:
+    class Boom:
+        def complete(self, **kwargs: object) -> ModelResponse:
+            del kwargs
+            raise RuntimeError("OpenAI support is not installed")
+
+    replay = replay_run(
+        failed_order_run(),
+        build_changeset(model="gpt-next"),
+        provider=Boom(),
+    )
+    assert replay.verdict == Verdict.error
+    assert "OpenAI support is not installed" in " ".join(replay.notes)
+
+
+def test_missing_tool_entrypoint_is_an_error_verdict() -> None:
+    source = failed_order_run()
+    replay = replay_run(
+        source,
+        build_changeset(tool_name="lookup_order", tool_entrypoint="missing.mod:nope"),
+        provider=provider(),
+    )
+    assert replay.verdict == Verdict.error
+    assert "cannot import missing.mod" in " ".join(replay.notes)
+
+
 def test_prompt_file_is_what_the_model_sees(tmp_path) -> None:
     prompt = tmp_path / "fixed.txt"
     prompt.write_text(FIXED, encoding="utf-8")
