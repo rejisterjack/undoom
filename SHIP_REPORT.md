@@ -885,7 +885,7 @@ None.
 - Production monitoring, tool permissions, sandboxing, a general benchmark, accounts, billing, a light theme, and hosted capture stay deferred.
 - Redaction is not a guarantee. A case file can still contain customer data.
 - A tool override runs with the test process privileges.
-- Next.js 16.4.3 has a published security advisory. This release does not include that upgrade.
+- The demo UI is Next.js 16.4.6, the release that addresses the advisory found in 16.4.3.
 - PyPI serves 1.0.1 until tag v1.0.2 is published.
 
 ## Launch Checklist
