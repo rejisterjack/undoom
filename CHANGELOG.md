@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The demo UI uses Next.js 16.4.6, the release that addresses the published security advisory.
+
 ## 1.0.2
 
 - A tool override or model provider that cannot be loaded is stored as verdict `error` instead of aborting the command.
