@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.0.2
+
+- A tool override or model provider that cannot be loaded is stored as verdict `error` instead of aborting the command.
+- The public UI sends nosniff, a referrer policy, framing denial, and a content security policy. A missing page stays in the library layout, and the tab has an icon.
+
 ## 1.0.1
 
 - Capture Anthropic `messages.create` traffic via `undoom.wrap_anthropic`.
