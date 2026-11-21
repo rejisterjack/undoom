@@ -1,6 +1,6 @@
 [project]
 name = "undoom"
-version = "1.0.1"
+version = "1.0.2"
 description = "Turn production agent failures into regression tests that run on every change."
 readme = "README.md"
 license = "MIT"

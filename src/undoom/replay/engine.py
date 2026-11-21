@@ -219,8 +219,15 @@ def _resolve_tool(
     return entry.result, entry.error, False
 
 
+class _EntrypointUnavailable(Exception):
+    """The tool override could not be imported. Replay records this as verdict error."""
+
+
 def _invoke(entrypoint: str, arguments: dict[str, Any]) -> tuple[Any, str | None]:
-    function = load_callable(entrypoint)
+    try:
+        function = load_callable(entrypoint)
+    except ReplayError as exc:
+        raise _EntrypointUnavailable(str(exc)) from exc
     try:
         return function(**arguments), None
     except Exception as exc:

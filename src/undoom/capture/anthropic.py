@@ -50,7 +50,9 @@ def parse_message(response: Any) -> ModelResponse:
     text_parts: list[str] = []
     calls: list[ToolCall] = []
     for block in getattr(response, "content", None) or []:
-        block_type = getattr(block, "type", None) or (block.get("type") if isinstance(block, dict) else None)
+        block_type = getattr(block, "type", None) or (
+            block.get("type") if isinstance(block, dict) else None
+        )
         if block_type == "text":
             value = getattr(block, "text", None)
             if value is None and isinstance(block, dict):
@@ -58,8 +60,12 @@ def parse_message(response: Any) -> ModelResponse:
             if value:
                 text_parts.append(str(value))
         elif block_type == "tool_use":
-            call_id = getattr(block, "id", None) or (block.get("id") if isinstance(block, dict) else None)
-            name = getattr(block, "name", None) or (block.get("name") if isinstance(block, dict) else None)
+            call_id = getattr(block, "id", None) or (
+                block.get("id") if isinstance(block, dict) else None
+            )
+            name = getattr(block, "name", None) or (
+                block.get("name") if isinstance(block, dict) else None
+            )
             raw_input = getattr(block, "input", None)
             if raw_input is None and isinstance(block, dict):
                 raw_input = block.get("input")
@@ -151,7 +157,9 @@ def _tool_loop(
                     handle.record({"error": f"unknown tool {call.name}"})
                 recorder.fail(f"unknown tool {call.name}", unexpected_tools=[call.name])
                 messages.append(
-                    _tool_result_message(call.id, {"error": f"unknown tool {call.name}"}, "unknown tool")
+                    _tool_result_message(
+                        call.id, {"error": f"unknown tool {call.name}"}, "unknown tool"
+                    )
                 )
                 return response
             with recorder.tool(call.name, call.arguments, call_id=call.id) as handle:
