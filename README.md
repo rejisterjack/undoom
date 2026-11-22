@@ -134,7 +134,9 @@ Prompt and tool changes point at files in your repo. `undoom test` reads those p
 ```yaml
 # .github/workflows/undoom.yml
 name: undoom
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
 jobs:
   regressions:
     runs-on: ubuntu-latest
@@ -212,6 +214,12 @@ uv run pytest
 ```
 
 `UNDOOM_TEST_POSTGRES` opts into the Postgres integration test. The default suite never calls the network.
+
+## CI/CD
+
+Workflows run only on a push to `main`. A pull request, any other branch, a tag push, a schedule, and a manual run do not start CI or CD. The only deploy target is production.
+
+A production publish to PyPI runs on that same push when the commit subject starts with `release: v` and a version (`release: v1.2.3`). Any other push to `main` runs checks only. Pushing a tag does not start a workflow. The example above is the same rule for a repository that copies it.
 
 ## What this is not
 

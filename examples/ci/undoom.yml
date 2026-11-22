@@ -3,7 +3,7 @@
 name: undoom
 on:
   push:
-  pull_request:
+    branches: [main]
 jobs:
   regressions:
     runs-on: ubuntu-latest

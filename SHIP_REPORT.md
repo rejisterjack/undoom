@@ -51,9 +51,9 @@ The package is local-first. It is not a monitor, a permission proxy, or a genera
 | DEMO-02 | Docker demo | P1 | PASSED | 0 | 0 | 0 | docker compose -f docker/compose.yml up --build demo writes the case onto a volume. |
 | DEMO-03 | Fake provider | P0 | PASSED | 0 | 0 | 0 | examples.order_lookup.fake:provider lets undoom test run with no API key. |
 | DEVOPS-01 | CI | P0 | PASSED | 1 | 1 | 0 | ruff format was red on anthropic.py. It is formatted. ruff, mypy, and pytest passed locally. |
-| DEVOPS-02 | PyPI | P0 | PASSED | 0 | 0 | 0 | A v* tag publishes with trusted publishing. The package version is 1.0.2. PyPI currently serves 1.0.1 until that tag. |
+| DEVOPS-02 | PyPI | P0 | PASSED | 0 | 0 | 0 | A push to main whose subject starts with `release: v` publishes with trusted publishing. The package version is 1.0.2. PyPI currently serves 1.0.1 until that release commit. |
 | DEVOPS-03 | Python versions | P1 | PASSED | 0 | 0 | 0 | Requires Python >= 3.11. CI covers 3.11 and 3.12. |
-| DEVOPS-04 | Example workflow | P2 | PASSED | 0 | 0 | 0 | examples/ci/undoom.yml and the README snippet run undoom test on push and pull request. |
+| DEVOPS-04 | Example workflow | P2 | PASSED | 0 | 0 | 0 | examples/ci/undoom.yml and the README snippet run undoom test only on a push to main. |
 
 ## Gaps
 
@@ -768,7 +768,7 @@ The package is local-first. It is not a monitor, a permission proxy, or a genera
 - **Priority:** P0
 - **Status:** PASSED
 - **Files:** .github/workflows/ci.yml
-- **Expected behavior:** Push and pull_request run ruff, ruff format, mypy, and pytest on Python 3.11 and 3.12 with Postgres available. A second job builds apps/ui with NEXT_PUBLIC_DEMO=1 on Node 22.
+- **Expected behavior:** A push to main runs ruff, ruff format, mypy, and pytest on Python 3.11 and 3.12 with Postgres available. A second job builds apps/ui with NEXT_PUBLIC_DEMO=1 on Node 22.
 - **Acceptance:**
   - [x] The workflow file contains those steps.
   - [x] This step did not run it.
@@ -825,7 +825,7 @@ The package is local-first. It is not a monitor, a permission proxy, or a genera
 - **Priority:** P2
 - **Status:** PASSED
 - **Files:** examples/ci/undoom.yml, README.md
-- **Expected behavior:** The example installs undoom and runs undoom test --format junit on push and pull_request, with OPENAI_API_KEY from the repo secrets. The fake provider is the path that does not need that key.
+- **Expected behavior:** The example installs undoom and runs undoom test --format junit only on a push to main, with OPENAI_API_KEY from the repo secrets. The fake provider is the path that does not need that key.
 - **Acceptance:**
   - [x] The example file matches the README snippet.
   - [x] It is an example, not the repo's own CI.
@@ -898,4 +898,4 @@ None.
 
 ## Decision
 
-GO. The library, the local API, the demo container, and the UI passed. Ship through a pull request to main, then tag v1.0.2.
+GO. The library, the local API, the demo container, and the UI passed. Ship by pushing `main` with the commit subject `release: v1.0.2`.

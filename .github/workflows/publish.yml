@@ -2,17 +2,30 @@ name: publish
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [main]
 
 jobs:
   pypi:
+    if: "startsWith(github.event.head_commit.message, 'release: v')"
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - name: Tag the release commit
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          subject=$(printf '%s\n' "$COMMIT_MESSAGE" | head -n 1)
+          tag=${subject#"release: "}
+          tag=${tag%%[[:space:]]*}
+          tag=${tag%$'\r'}
+          if ! printf '%s' "$tag" | grep -Eq '^v[0-9][0-9A-Za-z._+-]*$'; then
+            echo "commit subject must start with release: vX.Y.Z (got: ${tag})"
+            exit 1
+          fi
+          git tag -f "$tag"
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
